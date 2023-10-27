@@ -1,0 +1,202 @@
+<ion-content [fullscreen]="true">
+  <div>
+    <div style="text-align: center; margin: 15px">
+      <!-- <span>
+        <img
+          src="../../assets/2Day Weather Logo Idea 1.gif"
+          style="height: 60px; width: 60px"
+        />
+      </span> -->
+      <ion-label style="font-weight: 400; font-size: 1.5em"
+        >Weathered Up</ion-label
+      >
+    </div>
+
+    <!-- the search bar for looking up a city -->
+    <ion-searchbar
+      class="searchBar"
+      placeholder="Search for city"
+      animated
+      [(ngModel)]="CityName"
+      (ngModelChange)="loadWeatherData()"
+    ></ion-searchbar>
+
+    <!-- Location: City, Country -->
+    <div style="text-align: center">
+      <ion-icon id="locationIcon" name="location"></ion-icon>
+      <span id="location">{{CityName}}</span>
+    </div>
+
+    <ion-card class="card">
+      <ion-item lines="none">
+        <p slot="start" style="font-weight: 500; color: white">
+          Today's Forecast
+        </p>
+        <!-- Today's Date -->
+        <ion-label id="date" slot="end"
+          >{{currentDate | date : "EEE dd MMM, hh:mm a" }}</ion-label
+        >
+      </ion-item>
+
+      <ion-item lines="none">
+        <!-- Weather Icon -->
+        <img
+          slot="end"
+          [src]="currentWeatherIcon"
+          width="180spx"
+          height="200px"
+        />
+
+        <!-- Temperature -->
+        <span id="temp"> {{(currentTemp - 273.15).toFixed(0) }} </span>
+        <span
+          style="
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #f6b844;
+            margin-bottom: 25px;
+          "
+          >o</span
+        >
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label style="text-transform: capitalize"
+          >{{weatherDescr}}</ion-label
+        >
+        <ion-label id="date" slot="end">
+          Feels Like {{(feelsLike- 273.15).toFixed(0)}}&deg;
+        </ion-label>
+      </ion-item>
+
+      <!-- High and Low temps -->
+      <ion-row>
+        <!-- High -->
+        <ion-col size="8">
+          <ion-item lines="none">
+            <span id="date">High:</span>
+            <ion-label>&nbsp;{{(high - 273.15).toFixed(0)}}&deg;</ion-label>
+          </ion-item>
+        </ion-col>
+        <!-- Low -->
+        <ion-col size="4">
+          <ion-item lines="none">
+            <span id="date">Low:</span>
+            <ion-label>&nbsp;{{(low - 273.15).toFixed(0)}}&deg;</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <!-- Current Conditions Weather Cards -->
+    <div style="text-align: center">
+      <span id="location">Current Conditions</span>
+    </div>
+
+    <ion-row>
+      <!-- Humidity -->
+      <ion-col size="6">
+        <ion-card class="card">
+          <ion-item lines="none">
+            <ion-icon
+              style="color: #f6b844"
+              name="thermometer-outline"
+            ></ion-icon>
+            <span id="date">Humidity:</span>
+          </ion-item>
+          <ion-item>
+            <ion-label>&nbsp;{{humidity}}%</ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <!-- Wind -->
+      <ion-col size="6">
+        <ion-card class="card">
+          <ion-item lines="none">
+            <ion-icon style="color: #f6b844" name="compass-sharp"></ion-icon>
+            <span id="date">&nbsp;Wind:</span>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>&nbsp;{{(wind * 3.6).toFixed(2)}} km/h</ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Visibility -->
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="card">
+          <ion-item lines="none">
+            <ion-icon style="color: #f6b844" name="eye-sharp"></ion-icon>
+            <span id="date"> &nbsp;Visibility:</span>
+          </ion-item>
+          <ion-item>
+            <ion-label>&nbsp;{{visibility}}m</ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <!-- Cloudiness -->
+      <ion-col size="6">
+        <ion-card class="card">
+          <ion-item lines="none">
+            <ion-icon style="color: #f6b844" name="cloud-sharp"></ion-icon>
+            <span id="date">&nbsp;Cloudiness:</span>
+          </ion-item>
+          <ion-item>
+            <ion-label>&nbsp;{{clouds}}%</ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Sunrise/Sunset card -->
+    <div style="text-align: center">
+      <span id="location">Sunrise & Sunset</span>
+    </div>
+    <ion-card class="card">
+      <ion-row>
+        <!-- Sunrise -->
+        <ion-col size="6">
+          <ion-item lines="none">
+            <ion-icon style="color: #f6b844" name="sunny-sharp"></ion-icon>
+            <span id="date">&nbsp;Sunrise:</span>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>&nbsp;{{sunrise * 1000| date: 'hh:mm a'}}</ion-label>
+          </ion-item>
+        </ion-col>
+        <!-- Sunset -->
+        <ion-col size="6">
+          <ion-item lines="none">
+            <ion-icon style="color: #f6b844" name="moon-sharp"></ion-icon>
+            <span id="date">&nbsp;Sunset:</span>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>&nbsp;{{sunset * 1000 | date: 'hh:mm a'}}</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <!-- 5 Day Weather Forecast -->
+    <div style="text-align: center">
+      <span id="location">5 Day Weather Forecast</span>
+    </div>
+
+    <ng-container *ngFor="let item of dFiveDayForecast">
+      <ion-card class="card">
+        <ion-item>
+          <ion-label>{{item.date | date: 'EEE, d MMM'}}</ion-label>
+          <img slot="end" [src]="item.weatherIcon" width="40px" height="40px" />
+          <ion-label
+            >{{(item.maxTemp - 273.15).toFixed(0)}}&deg;/{{(item.minTemp -
+            273.15).toFixed(0)}}&deg;</ion-label
+          >
+        </ion-item>
+      </ion-card>
+    </ng-container>
+  </div>
+</ion-content>
